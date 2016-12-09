@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Socks</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_device">DeviceActivity</string>
+    <string name="title_activity_forgot">ForgotActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
 </resources>
