@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Socks.iml" filepath="$PROJECT_DIR$/Socks.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/socks.iml" filepath="$PROJECT_DIR$/socks.iml" />
     </modules>
   </component>
 </project>
