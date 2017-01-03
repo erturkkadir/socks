@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/socks.iml" filepath="$PROJECT_DIR$/socks.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libsvm/libsvm.iml" filepath="$PROJECT_DIR$/libsvm/libsvm.iml" />
     </modules>
   </component>
 </project>
