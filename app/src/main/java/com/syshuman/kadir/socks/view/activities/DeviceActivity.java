@@ -1,33 +1,34 @@
-package com.syshuman.kadir.socks;
+package com.syshuman.kadir.socks.view.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart.Callback {
+import com.syshuman.kadir.socks.R;
+import com.syshuman.kadir.socks.model.BluetoothLeUart;
+
+public class DeviceActivity extends Activity implements BluetoothLeUart.Callback {
 
     public TextView messages;
     public TextView txtStep;
+    private TextView tMessage;
     private String readStr = "";
     private Button btnStart;
+    private ImageView imgConnect;
 
     private BluetoothLeUart uart;
     private MediaPlayer firstSound, lastSound;
@@ -47,19 +48,25 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("This app needs location access");
+                builder.setMessage("Please grant location access so this app can detect beacons.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                    }
+                });
+                builder.show();
             }
-        });
+        }
 
 
+
+        tMessage = (TextView) findViewById(R.id.tMessage);
         txtStep = (TextView) findViewById(R.id.txtStep);
 
         messages = (TextView) findViewById(R.id.messages);
@@ -68,6 +75,7 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
         messages.setMovementMethod(new ScrollingMovementMethod());
         firstSound = MediaPlayer.create(getApplicationContext(), R.raw.beep07);
         lastSound = MediaPlayer.create(getApplicationContext(), R.raw.beep04);
+        imgConnect = (ImageView) findViewById(R.id.imgBT);
 
         btnStart = (Button) findViewById(R.id.Start);
 
@@ -95,7 +103,8 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
         writeLine("\nScanning for device... ");
         uart.registerCallback(this);
         uart.connectFirstAvailable();
-        //uart.getDeviceInfo();
+        imgConnect.setBackgroundResource(R.drawable.bt_passive);
+        tMessage.setText("Scanning....");
     }
 
     // OnStop, called right before the activity loses foreground fopublic void onConneccus.  Close the BTLE connection.
@@ -105,6 +114,8 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
         uart.unregisterCallback(this);
         uart.disconnect();
         writeLine("\nStopped..");
+        imgConnect.setBackgroundResource(R.drawable.bt_passive);
+        tMessage.setText("Stopped....");
     }
 
 
@@ -113,6 +124,8 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
         writeLine("\nConnected : ");
         btnStart.setClickable(true);
         btnStart.setEnabled(false);
+        imgConnect.setBackgroundResource(R.drawable.bt_active);
+        tMessage.setText("Connected...");
     }
 
     @Override
@@ -120,6 +133,8 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
         writeLine("\nError connecting to device ! ");
         btnStart.setClickable(false);
         btnStart.setEnabled(false);
+        imgConnect.setBackgroundResource(R.drawable.bt_passive);
+        tMessage.setText("Error connecting the device,..");
 
     }
 
@@ -128,6 +143,8 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
         writeLine("\nDisconnected!");
         btnStart.setClickable(false);
         btnStart.setEnabled(false);
+        imgConnect.setBackgroundResource(R.drawable.bt_passive);
+        tMessage.setText("Disconnecting....");
 
     }
 
@@ -135,6 +152,7 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
     public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx) {
         String msg = "" + rx.getStringValue(0);
         Log.d("TAG", msg);
+        tMessage.setText(msg);
 
         if (msg.indexOf('|') > 0) {
             readStr = readStr + msg;
@@ -152,10 +170,13 @@ public class DeviceActivity extends AppCompatActivity implements BluetoothLeUart
         Log.d("Test", device.toString());
         writeLine("\nFound device : " + device.toString());
         writeLine("\nWaiting for a connection....");
+        imgConnect.setBackgroundResource(R.drawable.bt_passive);
+        tMessage.setText("Device Found : "+device.toString());
     }
 
     @Override
     public void onDeviceInfoAvailable() {
+
         writeLine(uart.getDeviceInfo());
     }
 

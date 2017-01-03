@@ -1,4 +1,4 @@
-package com.syshuman.kadir.socks;
+package com.syshuman.kadir.socks.model;
 
 /**
  * Created by kadir on 2016-12-08.

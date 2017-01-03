@@ -38,28 +38,29 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:name=".view.activities.BoardingActivity"
+            android:label="@string/title_activity_boarding"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity
-            android:name=".DeviceActivity"
+            android:name=".view.activities.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".view.activities.DeviceActivity"
             android:label="@string/title_activity_device"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ForgotActivity"
-            android:label="@string/title_activity_forgot"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>

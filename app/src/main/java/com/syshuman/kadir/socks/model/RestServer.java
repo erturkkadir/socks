@@ -1,4 +1,4 @@
-package com.syshuman.kadir.socks;
+package com.syshuman.kadir.socks.model;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.syshuman.kadir.socks.view.activities.BoardingActivity;
+import com.syshuman.kadir.socks.view.activities.DeviceActivity;
+import com.syshuman.kadir.socks.view.activities.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,13 +38,15 @@ public class RestServer {
     private String baseUrl  = "http://hcapi.free-estimation.com/";
     private Context context;
 
-    public RestServer() {
+
+    public RestServer(Context context) {
+        this.context = context;
     }
 
-    public void login(final Context context, final String uname, final String upass) {
+    public void login(final String uname, final String upass) {
 
         String url = this.baseUrl + "api/v1/users/login";
-        this.context = context;
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>(){
                     @Override
@@ -52,8 +57,9 @@ public class RestServer {
                             String message = json.getString("message");
                             JSONObject data = json.getJSONObject("data");
                             if(statusCode.equals("200 OK")) {
-                                Intent intent = new Intent(context, DeviceActivity.class);
                                 saveUser(data);
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 context.startActivity(intent);
                             } else {
                                 Toast.makeText(context, message, Toast.LENGTH_LONG).show();
@@ -98,7 +104,7 @@ public class RestServer {
             String um_email = userm.getString("um_email");
             String um_uname = userm.getString("um_uname");
             String um_token = userm.getString("um_token");
-            SharedPreferences prefs = this.context.getSharedPreferences("com.gedenek.haircolor", context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences("com.syshuman.kadir.socks", context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("um_no", um_no);
             editor.putInt("cm_no", cm_no);

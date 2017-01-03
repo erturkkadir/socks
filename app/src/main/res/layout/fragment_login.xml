@@ -1,0 +1,203 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.syshuman.kadir.socks.view.fragments.LoginFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/forgot_password_view"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:clickable="true"
+            android:src="@mipmap/ic_back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/forgot_password_title1"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/back_arrow"
+            android:text="@string/forgot_password"
+            android:textSize="@dimen/font_top_bar_size"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/forgot_password_title2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
+            android:text="@string/password_reset"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/font_title_size" />
+
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/email_input_wrap2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/forgot_password_title2"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/account_email_input2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@color/transparent"
+                android:drawableLeft="@mipmap/sing_upemail"
+                android:drawablePadding="5dp"
+                android:hint="@string/account_email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress|textAutoCorrect"
+                android:maxLength="50"
+                android:textColor="@color/colorBlack" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+            android:id="@+id/dividen_line4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/email_input_wrap2"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorBlack" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/dividen_line4"
+            android:id="@+id/send_email"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/send_instruction"/>
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_login_view"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/superlight_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/font_title_size" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/email_input_wrap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/superlight_title"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/account_email_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@color/transparent"
+                android:drawableLeft="@mipmap/sing_upemail"
+                android:drawablePadding="5dp"
+                android:hint="@string/account_email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress|textAutoCorrect"
+                android:maxLength="50"
+                android:text="a@a.com"
+                android:textColor="@color/colorBlack" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+            android:id="@+id/dividen_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/email_input_wrap"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorBlack" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/password_input_wrap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dividen_line"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/password_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dividen_line"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/transparent"
+                android:drawableLeft="@mipmap/ic_lock"
+                android:drawablePadding="15dp"
+                android:hint="@string/password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:text="1"
+                android:textColor="@color/colorBlack" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/password_input_wrap"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/colorLightBlue"
+            android:text="@string/login"
+            android:textColor="@color/colorBlack" />
+
+
+        <Button
+            android:id="@+id/register_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/login_btn"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_black_stroke_rectangle"
+            android:text="@string/register"
+            android:textColor="@color/colorLightBlue" />
+
+        <TextView
+            android:id="@+id/forgot_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/forgot_password"
+            android:textColor="@color/colorBlack" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>

@@ -1,4 +1,4 @@
-package com.syshuman.kadir.socks;
+package com.syshuman.kadir.socks.model;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -23,9 +23,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Created by kadir on 2016-12-08.
  */
 
-public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothAdapter.LeScanCallback {
+public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothAdapter.LeScanCallback { // UUIDs for UART service and associated characteristics.
 
-    // UUIDs for UART service and associated characteristics.
     public static String LOG_TAG = "Adafruit Ind";
     // UUIDs for UART service and associated characteristics.
     public static UUID UART_UUID      = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
@@ -36,14 +35,11 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
     public static UUID CLIENT_UUID    = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB");
 
     // UUIDs for the Device Information service and associated characeristics.
-    //public static UUID DIS_UUID       = UUID.fromString("000001530-1212-EFDE-1523-785FEABCD123");
-
-    public static UUID DIS_UUID       = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
-
-    public static UUID DIS_MANUF_UUID = UUID.fromString("00002A00-0000-1000-8000-00805F9B34FB");
-    public static UUID DIS_MODEL_UUID = UUID.fromString("00002A01-0000-1000-8000-00805F9B34FB");
-    public static UUID DIS_HWREV_UUID = UUID.fromString("00002A04-0000-1000-8000-00805F9B34FB");
-    public static UUID DIS_SWREV_UUID = UUID.fromString("00002A04-0000-1000-8000-00805F9B34FB");
+    public static UUID DIS_UUID       = UUID.fromString("000001530-1212-EFDE-1523-785FEABCD123");
+    public static UUID DIS_MANUF_UUID = UUID.fromString("00002A29-0000-1000-8000-00805F9B34FB");
+    public static UUID DIS_MODEL_UUID = UUID.fromString("00002A24-0000-1000-8000-00805F9B34FB");
+    public static UUID DIS_HWREV_UUID = UUID.fromString("00002A26-0000-1000-8000-00805F9B34FB");
+    public static UUID DIS_SWREV_UUID = UUID.fromString("00002A28-0000-1000-8000-00805F9B34FB");
 
     // Internal UART state.
     private Context context;
@@ -189,13 +185,11 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         // Disconnect to any connected device.
         disconnect();
         // Stop any in progress device scan.
-        Log.d(LOG_TAG, "Stop Scan");
         stopScan();
         // Start scan and connect to first available device.
         connectFirst = true;
-
         startScan();
-        Log.d(LOG_TAG, "Start Scan");
+        Log.d(LOG_TAG, "SatartScan");
     }
 
     // Handlers for BluetoothGatt and LeScan events.
@@ -236,7 +230,7 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         tx = gatt.getService(UART_UUID).getCharacteristic(TX_UUID);
         Log.d(LOG_TAG, "TX : " + tx.toString());
         rx = gatt.getService(UART_UUID).getCharacteristic(RX_UUID);
-        Log.d(LOG_TAG, "RX : " + rx.toString());
+        Log.d(LOG_TAG, "TX : " + rx.toString());
 
         // Save reference to each DIS characteristic.
         disManuf = gatt.getService(DIS_UUID).getCharacteristic(DIS_MANUF_UUID);
@@ -248,12 +242,6 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         // These need to be queued because we have to wait for the response to the first
         // read request before a second one can be processed (which makes you wonder why they
         // implemented this with async logic to begin with???)
-
-        Log.d(LOG_TAG, "Manuf : " + disManuf.toString());
-        Log.d(LOG_TAG, "Model : " + disModel.toString());
-        Log.d(LOG_TAG, "HWRew : " + disHWRev.toString());
-        Log.d(LOG_TAG, "SWRef : " + disSWRev.toString());
-
         try
         {
             readQueue.offer(disManuf);
@@ -269,7 +257,7 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         try {
             gatt.readCharacteristic(disManuf);
         } catch (Exception e) {
-            Log.d(LOG_TAG,"sisMagnum"+e.getMessage().toString());
+            Log.d(LOG_TAG,"sisMagnum");
         }
 
         // Setup notifications on RX characteristic changes (i.e. data received).
@@ -291,7 +279,7 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         desc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         if (!gatt.writeDescriptor(desc)) {
             // Stop if the client descriptor could not be written.
-            Log.d(LOG_TAG, "ENABLE NOTIFICATION" );
+            Log.d(LOG_TAG, "ENEBALE NOTIFICA" );
             connectFailure();
             return;
         }
