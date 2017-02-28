@@ -31,89 +31,42 @@ import com.syshuman.kadir.socks.model.BluetoothLeUart;
 
 public class MainActivity extends AppCompatActivity implements BluetoothLeUart.Callback {
 
-    String devId, messages, readStr;
+    String devId, messages, readStr, ble_status="No connection";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private BluetoothLeUart uart;
     private Context context;
     private FloatingActionButton btnBLE;
+    private Toolbar toolbar;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.context = getApplicationContext();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("This app needs location access");
-                builder.setMessage("Please grant location access so this app can detect beacons.");
-                builder.setPositiveButton(android.R.string.ok, null);
-                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    public void onDismiss(DialogInterface dialog) {
-                        requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-                    }
-                });
-                builder.show();
-            }
-        }
+        getPermissions();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_open, R.string.navigation_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                int id = item.getItemId();
-
-                if (id == R.id.nav_camera) {
-                    // Handle the camera action
-                } else if (id == R.id.nav_gallery) {
-
-                } else if (id == R.id.nav_slideshow) {
-
-                } else if (id == R.id.nav_manage) {
-
-                } else if (id == R.id.nav_share) {
-
-                } else if (id == R.id.nav_send) {
-
-                }
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-
-            }
-        });
-
-
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "BLE is not supported", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
+        NavAndDraw();
 
         btnBLE = (FloatingActionButton) findViewById(R.id.btnBLE);
-
-
         btnBLE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, ble_status, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
-        uart = new BluetoothLeUart(context);
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                uart = new BluetoothLeUart(context);
+            }
+        });
     }
 
     @Override
@@ -134,37 +87,17 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
         return super.onOptionsItemSelected(item);
     }
 
-
     public void disableBLE() {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                btnBLE.setImageResource(R.drawable.bt_passive);
-                btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorGrey)));
-                Log.i("BLE", "disableLE");
-            }
-        });
     }
 
     public void enableBLE() {
+        ble_status = "BLE Enabled";
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 btnBLE.setImageResource(R.drawable.bt_active);
                 btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue)));
-                Log.i("BLE", "enableLE");
-            }
-        });
-
-    }
-
-    public void deviceFound() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                btnBLE.setImageResource(R.drawable.bt_passive);
-                btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.yellow)));
                 Log.i("BLE", "enableLE");
             }
         });
@@ -198,23 +131,25 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
     @Override
     public void onConnected(BluetoothLeUart uart) {
         Log.i("BLE", "onConnected" + uart.toString());
+        ble_status = "Connected ";
         enableBLE();
     }
 
     @Override
     public void onConnectFailed(BluetoothLeUart uart) {
-        Log.i("BLE", "onConnectFailed" + uart.toString());
+        ble_status = "Connection Failed, " + uart.toString();
         disableBLE();
     }
 
     @Override
     public void onDisconnected(BluetoothLeUart uart) {
-        Log.i("BLE", "onDisconnected" + uart.toString());
-       disableBLE();
+        ble_status = "Device Disconnected";
+        disableBLE();
     }
 
     @Override
     public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx) {
+        ble_status = "Data Streaming";
         String msg = "" + rx.getStringValue(0);
         if (msg.indexOf('|') > 0) {
             readStr = readStr + msg;
@@ -227,14 +162,28 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
 
     @Override
     public void onDeviceFound(BluetoothDevice device) {
-        Log.i("BLE", "device found" + device.toString());
-        deviceFound();
+        ble_status = "Device Found";
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnBLE.setImageResource(R.drawable.bt_passive);
+                btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.yellow)));
+            }
+        });
     }
 
     @Override
     public void onDeviceInfoAvailable() {
-        Log.i("BLE", "info found" + uart.toString());
-
+        ble_status = "BLE Disabled";
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnBLE.setImageResource(R.drawable.bt_passive);
+                btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorGrey)));
+                Log.i("BLE", "disableLE");
+            }
+        });
+        ble_status = "Device Info Available" + uart.toString();
     }
 
     public void decode(final String str) {
@@ -270,5 +219,62 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
                 return;
             }
         }
+    }
+
+    public void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("This app needs location access");
+                builder.setMessage("Please grant location access so this app can detect beacons.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                    }
+                });
+                builder.show();
+            }
+        }
+
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "BLE is not supported", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    public void NavAndDraw() {
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_open, R.string.navigation_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                int id = item.getItemId();
+                if (id == R.id.nav_camera) {
+                    // Handle the camera action
+                } else if (id == R.id.nav_gallery) {
+
+                } else if (id == R.id.nav_slideshow) {
+
+                } else if (id == R.id.nav_manage) {
+
+                } else if (id == R.id.nav_share) {
+
+                } else if (id == R.id.nav_send) {
+
+                }
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+
+            }
+        });
     }
 }
