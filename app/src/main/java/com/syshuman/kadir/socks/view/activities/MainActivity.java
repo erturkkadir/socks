@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,30 +14,36 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.syshuman.kadir.socks.R;
 import com.syshuman.kadir.socks.model.BluetoothLeUart;
+import com.syshuman.kadir.socks.view.adapter.GraphAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BluetoothLeUart.Callback {
 
-    String devId, messages, readStr, ble_status="No connection";
+    String deviceID, messages, readStr, ble_status="No connection";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private BluetoothLeUart uart;
     private Context context;
     private FloatingActionButton btnBLE;
     private Toolbar toolbar;
-
-
+    private GraphAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
         getPermissions();
 
         NavAndDraw();
+
+        LineDataSet dataset = new LineDataSet(getData(), "assa");
+        adapter = new GraphAdapter(context, dataset);
+        RecyclerView rv_graph = (RecyclerView) findViewById(R.id.rv_graph);
+        rv_graph.setAdapter(adapter);
+
 
         btnBLE = (FloatingActionButton) findViewById(R.id.btnBLE);
         btnBLE.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +99,15 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
     }
 
     public void disableBLE() {
+        ble_status = "BLE Enabled";
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnBLE.setImageResource(R.drawable.bt_active);
+                btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorGrey)));
+                Log.i("BLE", "enableLE");
+            }
+        });
 
     }
 
@@ -191,13 +211,14 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String step = str.substring(str.indexOf('l') + 1, str.indexOf('|'));
+                //String step = str.substring(str.indexOf('l') + 1, str.indexOf('|'));
+                Log.d("Debug", "Step data here");
             }
         });
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull  int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_COARSE_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -216,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
                     });
                     builder.show();
                 }
-                return;
             }
         }
     }
@@ -257,24 +277,32 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
 
                 int id = item.getItemId();
                 if (id == R.id.nav_camera) {
-                    // Handle the camera action
+                    Log.d("Debug", "Nav Camera");
                 } else if (id == R.id.nav_gallery) {
-
+                    Log.d("Debug", "Nav Gallery");
                 } else if (id == R.id.nav_slideshow) {
-
+                    Log.d("Debug", "Nav Slideshow");
                 } else if (id == R.id.nav_manage) {
-
+                    Log.d("Debug", "Nav Manage");
                 } else if (id == R.id.nav_share) {
-
+                    Log.d("Debug", "Nav Share");
                 } else if (id == R.id.nav_send) {
-
+                    Log.d("Debug", "Nav Send");
                 }
-
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
 
             }
         });
+    }
+
+
+    public List<Entry> getData() {
+        List<Entry> data = new ArrayList<Entry>();
+        data.add(new Entry(1, 1 ));
+        data.add(new Entry(2, 2 ));
+        return data;
+
     }
 }
