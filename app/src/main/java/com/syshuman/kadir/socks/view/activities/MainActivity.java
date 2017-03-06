@@ -26,8 +26,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.syshuman.kadir.socks.R;
 import com.syshuman.kadir.socks.model.BluetoothLeUart;
 import com.syshuman.kadir.socks.view.adapter.GraphAdapter;
@@ -57,8 +61,10 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
 
         NavAndDraw();
 
-        LineDataSet dataset = new LineDataSet(getData(), "assa");
-        adapter = new GraphAdapter(context, dataset);
+        ArrayList<BarData> list = new ArrayList<>();
+        for(int i=0; i<20; i++) list.add(generateData(i+1));
+
+        adapter = new GraphAdapter(context, list);
         RecyclerView rv_graph = (RecyclerView) findViewById(R.id.rv_graph);
         rv_graph.setAdapter(adapter);
 
@@ -80,6 +86,18 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
         });
     }
 
+    private BarData generateData(int cnt) {
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        for(int i=0; i<12; i++)
+            entries.add(new BarEntry(i, (float) (Math.random() * 70) + 30));
+        BarDataSet d = new BarDataSet(entries, "New Dataset " + cnt);
+        ArrayList<IBarDataSet> sets = new ArrayList<>();
+        sets.add(d);
+        BarData cd = new BarData(sets);
+        return cd;
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -99,13 +117,13 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
     }
 
     public void disableBLE() {
-        ble_status = "BLE Enabled";
+        ble_status = "Disable BLE";
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 btnBLE.setImageResource(R.drawable.bt_active);
                 btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorGrey)));
-                Log.i("BLE", "enableLE");
+                Log.i("BLE", "DisabledBLE");
             }
         });
 
@@ -118,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
             public void run() {
                 btnBLE.setImageResource(R.drawable.bt_active);
                 btnBLE.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue)));
-                Log.i("BLE", "enableLE");
+                Log.i("BLE", "enabled BLE");
             }
         });
 

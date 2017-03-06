@@ -63,12 +63,12 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
 
     // Interface for a BluetoothLeUart client to be notified of UART actions.
     public interface Callback {
-        public void onConnected(BluetoothLeUart uart);
-        public void onConnectFailed(BluetoothLeUart uart);
-        public void onDisconnected(BluetoothLeUart uart);
-        public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx);
-        public void onDeviceFound(BluetoothDevice device);
-        public void onDeviceInfoAvailable();
+        void onConnected(BluetoothLeUart uart);
+        void onConnectFailed(BluetoothLeUart uart);
+        void onDisconnected(BluetoothLeUart uart);
+        void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx);
+        void onDeviceFound(BluetoothDevice device);
+        void onDeviceInfoAvailable();
     }
 
     public BluetoothLeUart(Context context) {

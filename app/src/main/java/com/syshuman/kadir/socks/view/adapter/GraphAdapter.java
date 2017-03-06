@@ -8,22 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.syshuman.kadir.socks.R;
+
+import java.util.ArrayList;
 
 
 public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.ViewHolder> {
 
     private static int ITEM = 0;
     private static int TITLE = 1;
-    private LineDataSet dataset;
+    private ArrayList<BarData> dataset;
 
 
     private Context context;
 
-    public GraphAdapter(Context context, LineDataSet dataset) {
+    public GraphAdapter(Context context, ArrayList<BarData> dataset) {
         this.context = context;
         this.dataset = dataset;
     }
@@ -38,8 +42,9 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.staDate.setText("Start");
         holder.endDate.setText("End");
-        LineData data = new LineData(dataset);
+        BarData data = dataset.get(position);
         holder.chart.setData(data);
+        holder.chart.notifyDataSetChanged();
         holder.chart.invalidate();
 
 
@@ -61,16 +66,13 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView staDate, endDate;
-        LineChart chart;
+        BarChart chart;
 
         private ViewHolder(View itemView) {
             super(itemView);
             staDate = (TextView) itemView.findViewById(R.id.eStartDate);
             endDate = (TextView) itemView.findViewById(R.id.eEndDate);
-            chart = (LineChart) itemView.findViewById(R.id.chart);
-            chart.notifyDataSetChanged();
-            chart.invalidate();
-
+            chart = (BarChart) itemView.findViewById(R.id.chart);
         }
     }
 
