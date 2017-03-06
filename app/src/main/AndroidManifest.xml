@@ -27,10 +27,10 @@
         android:required="true" />
 
     <permission
-        android:name="com.gedenek.haircolor.permission.C2D_MESSAGE"
+        android:name="com.syshuman.kadir.socks.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.gedenek.haircolor.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.syshuman.kadir.socks.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
