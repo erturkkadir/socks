@@ -66,18 +66,19 @@ public class DeviceActivity extends Activity implements BluetoothLeUart.Callback
 
 
 
-        tMessage = (TextView) findViewById(R.id.tMessage);
+        //tMessage = (TextView) findViewById(R.id.meessages);
         txtStep = (TextView) findViewById(R.id.txtStep);
 
-        messages = (TextView) findViewById(R.id.messages);
+        messages = (TextView) findViewById(R.id.msgBox);
+
 
         messages.setText("Started..!!!!!!!.\n");
         messages.setMovementMethod(new ScrollingMovementMethod());
         firstSound = MediaPlayer.create(getApplicationContext(), R.raw.beep07);
         lastSound = MediaPlayer.create(getApplicationContext(), R.raw.beep04);
-        imgConnect = (ImageView) findViewById(R.id.imgBT);
+        //imgConnect = (ImageView) findViewById(R.id.imgBT);
 
-        btnStart = (Button) findViewById(R.id.Start);
+        btnStart = (Button) findViewById(R.id.btnStart);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
