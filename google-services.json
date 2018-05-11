@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "423668349655",
+    "firebase_url": "https://socks-77350.firebaseio.com",
+    "project_id": "socks-77350",
+    "storage_bucket": "socks-77350.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423668349655:android:1d539c25f3ac239f",
+        "android_client_info": {
+          "package_name": "com.syshuman.kadir.socks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "423668349655-dm2tb7def2g46ms88f92fo0n2tko71s6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP9y-yp03QVHZgk8ysLtb-21Yqu8zM-F4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
